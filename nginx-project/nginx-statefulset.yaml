@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-statefulset
+  namespace: ns-nginx
+spec:
+  serviceName: "nginx"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: deepika2897/nginx-image:latest
+        ports:
+        - containerPort: 443
+          name: https
+        volumeMounts:
+        - name: nginx-pvc
+          mountPath: /usr/share/nginx/html
+        - name: tls-cert
+          mountPath: /etc/ssl/certs
+          readOnly: true
+        - name: tls-key
+          mountPath: /etc/ssl/private
+          readOnly: true
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: tls-cert
+        secret:
+          secretName: nginx-tls
+          items:
+          - key: tls.crt
+            path: cision.crt
+      - name: tls-key
+        secret:
+          secretName: nginx-tls
+          items:
+          - key: tls.key
+            path: cision.key
+  volumeClaimTemplates:
+  - metadata:
+      name: nginx-pvc
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi
