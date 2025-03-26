@@ -105,3 +105,13 @@ jobs:
           kubectl port-forward svc/nginx-service 8443:443 -n ns-nginx &
           sleep 10
           curl -k https://localhost:8443
+
+      - name: Check Nginx Pod Logs
+        run: |
+          POD_NAME=$(kubectl get pods -n ns-nginx -l app=nginx -o jsonpath="{.items[0].metadata.name}")
+          kubectl logs $POD_NAME -n ns-nginx
+
+      - name: Verify HTML File in Nginx Pod
+        run: |
+          POD_NAME=$(kubectl get pods -n ns-nginx -l app=nginx -o jsonpath="{.items[0].metadata.name}")
+          kubectl exec -it $POD_NAME -n ns-nginx -- /bin/sh -c "ls -l /usr/share/nginx/html"
