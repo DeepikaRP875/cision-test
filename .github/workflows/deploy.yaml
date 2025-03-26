@@ -24,7 +24,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./nginx-project
           push: true
           tags: deepika2897/nginx-image:latest
 
