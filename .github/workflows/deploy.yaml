@@ -52,9 +52,11 @@ jobs:
 
       - name: Create Kubernetes secret
         run: |
+          echo "${{ secrets.SSL_CERT }}" | base64 --decode > /tmp/cision.crt
+          echo "${{ secrets.SSL_KEY }}" | base64 --decode > /tmp/cision.key
           kubectl create secret tls nginx-tls \
-            --cert=/Users/deepikarajendran/ssl/cision.crt \
-            --key=/Users/deepikarajendran/ssl/cision.key \
+            --cert=/tmp/cision.crt \
+            --key=/tmp/cision.key \
             --namespace=ns-nginx
 
       - name: Deploy StatefulSet
