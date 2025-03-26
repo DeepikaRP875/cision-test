@@ -46,7 +46,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.28.1
+        uses: aquasecurity/trivy-action@0.29.0
         with:
           image-ref: 'deepika2897/nginx-image:latest'
           format: 'table'
@@ -86,10 +86,14 @@ jobs:
             --namespace=ns-nginx
 
       - name: Deploy StatefulSet
-        run: kubectl apply -f ./nginx-project/nginx-statefulset.yaml
+        run: |
+          kubectl apply -f ./nginx-project/nginx-statefulset.yaml
+          kubectl rollout status statefulset/nginx-statefulset -n ns-nginx
 
       - name: Deploy Service
-        run: kubectl apply -f ./nginx-project/nginx-service.yaml
+        run: |
+          kubectl apply -f ./nginx-project/nginx-service.yaml
+          kubectl rollout status service/nginx-service -n ns-nginx
 
       - name: Port forward and test connection
         run: |
