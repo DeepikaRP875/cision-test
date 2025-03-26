@@ -6,7 +6,7 @@ RUN mkdir -p /var/cache/nginx /var/run /var/log/nginx && \
     chown -R nginx:nginx /var/cache/nginx /var/run /var/log/nginx /etc/nginx
 
 # Copy the HTML file to the Nginx HTML directory
-COPY index.html /usr/share/nginx/html/index.html
+COPY index.html /usr/share/nginx/html/
 
 # Set the correct permissions for the HTML file
 RUN chmod 644 /usr/share/nginx/html/index.html
