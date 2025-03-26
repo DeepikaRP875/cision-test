@@ -93,7 +93,6 @@ jobs:
       - name: Deploy Service
         run: |
           kubectl apply -f ./nginx-project/nginx-service.yaml
-          kubectl rollout status service/nginx-service -n ns-nginx
 
       - name: Port forward and test connection
         run: |
