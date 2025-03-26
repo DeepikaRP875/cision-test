@@ -51,7 +51,7 @@ jobs:
         with:
           image-ref: 'deepika2897/nginx-image:latest'
           format: 'table'
-          exit-code: '0' # Ensure the job does not fail
+          exit-code: '0' 
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
@@ -71,8 +71,8 @@ jobs:
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
-      with:
-        version: 'latest'
+        with:
+          version: 'latest'
 
       - name: Create Kubernetes namespace
         run: kubectl apply -f ./nginx-project/namespace.yaml
