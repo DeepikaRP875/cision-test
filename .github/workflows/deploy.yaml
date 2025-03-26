@@ -97,6 +97,9 @@ jobs:
       - name: Verify Service
         run: kubectl get svc nginx-service -n ns-nginx
 
+      - name: Apply RoleBinding
+        run: kubectl apply -f ./nginx-project/nginx-rolebinding.yaml
+
       - name: Port forward and test connection
         run: |
           kubectl port-forward svc/nginx-service 8443:443 -n ns-nginx &
