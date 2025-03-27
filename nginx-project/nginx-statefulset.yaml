@@ -36,17 +36,17 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "500m"
-        livenessProbe:
+        livenessProbe: 
           httpGet:
-            path: /healthz
-            port: 443
+            path: /
+            port: https
             scheme: HTTPS
-          initialDelaySeconds: 30
-          periodSeconds: 10
+          initialDelaySeconds: 15
+          periodSeconds: 20
         readinessProbe:
           httpGet:
-            path: /readiness
-            port: 443
+            path: /
+            port: https
             scheme: HTTPS
           initialDelaySeconds: 5
           periodSeconds: 10
