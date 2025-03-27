@@ -72,6 +72,8 @@ jobs:
             --namespace=ns-nginx
 
       - name: Deploy StatefulSet
+        env:
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           kubectl apply -f ./nginx-project/nginx-statefulset.yaml
           kubectl rollout status statefulset/nginx-statefulset -n ns-nginx
