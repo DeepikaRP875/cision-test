@@ -21,23 +21,32 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./nginx-project
+          file: ./nginx-project/Dockerfile
+          push: false
+          tags: deepika2897/nginx-image:${{ github.sha }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.29.0
+        continue-on-error: true
+        with:
+          image-ref: 'deepika2897/nginx-image:${{ github.sha }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL'
+
+      - name: Push Docker image
         uses: docker/build-push-action@v4
         with:
           context: ./nginx-project
           file: ./nginx-project/Dockerfile
           push: true
           tags: deepika2897/nginx-image:${{ github.sha }}
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.29.0
-        with:
-          image-ref: 'deepika2897/nginx-image:${{ github.sha }}'
-          format: 'table'
-          exit-code: '0'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL'
 
       - name: Set up Minikube
         run: |
