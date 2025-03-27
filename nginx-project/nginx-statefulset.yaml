@@ -36,20 +36,6 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "500m"
-        livenessProbe: 
-          httpGet:
-            path: /
-            port: https
-            scheme: HTTPS
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        readinessProbe:
-          httpGet:
-            path: /
-            port: https
-            scheme: HTTPS
-          initialDelaySeconds: 5
-          periodSeconds: 10
       volumes:
       - name: tls-cert
         secret:
