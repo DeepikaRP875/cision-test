@@ -77,13 +77,6 @@ jobs:
       - name: Create Kubernetes namespace
         run: kubectl apply -f ./nginx-project/namespace.yaml
 
-      - name: Set permissions for SSL certificates
-        run: |
-          sudo chown nginx:nginx /etc/ssl/certs/cision.crt
-          sudo chown nginx:nginx /etc/ssl/private/cision.key
-          sudo chmod 644 /etc/ssl/certs/cision.crt
-          sudo chmod 600 /etc/ssl/private/cision.key
-
       - name: Create Kubernetes secret
         run: |
           echo "${{ secrets.SSL_CERT }}" | base64 --decode > /tmp/cision.crt
@@ -100,9 +93,6 @@ jobs:
 
       - name: Deploy Service
         run: kubectl apply -f ./nginx-project/nginx-service.yaml
-
-      - name: Verify Service
-        run: kubectl get svc nginx-service -n ns-nginx
 
       - name: Apply RoleBinding
         run: kubectl apply -f ./nginx-project/nginx-rolebinding.yaml
