@@ -27,13 +27,13 @@ jobs:
           context: ./nginx-project
           file: ./nginx-project/Dockerfile
           push: false
-          tags: deepika2897/nginx-image:${{ github.sha }}
+          tags: deepika2897/nginx:${{ github.sha }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.29.0
         continue-on-error: true
         with:
-          image-ref: 'deepika2897/nginx-image:${{ github.sha }}'
+          image-ref: 'deepika2897/nginx:${{ github.sha }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -46,7 +46,7 @@ jobs:
           context: ./nginx-project
           file: ./nginx-project/Dockerfile
           push: true
-          tags: deepika2897/nginx-image:${{ github.sha }}
+          tags: deepika2897/nginx:${{ github.sha }}
 
       - name: Set up Minikube
         run: |
