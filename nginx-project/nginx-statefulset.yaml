@@ -38,17 +38,17 @@ spec:
             cpu: "500m"
         livenessProbe:
           httpGet:
-            path: /
+            path: /healthz
             port: 443
             scheme: HTTPS
-          initialDelaySeconds: 30
+          initialDelaySeconds: 60
           periodSeconds: 10
         readinessProbe:
           httpGet:
-            path: /
+            path: /ready
             port: 443
             scheme: HTTPS
-          initialDelaySeconds: 5
+          initialDelaySeconds: 10
           periodSeconds: 10
       volumes:
       - name: tls-cert
