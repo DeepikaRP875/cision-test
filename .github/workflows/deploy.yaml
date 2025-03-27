@@ -21,12 +21,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build Docker image
         uses: docker/build-push-action@v4
         with:
           context: ./nginx-project
           file: ./nginx-project/Dockerfile
-          push: true
           tags: deepika2897/nginx:v1.0.0
 
       - name: Run Trivy vulnerability scanner
@@ -39,6 +38,14 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL'
+
+      - name: Push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./nginx-project
+          file: ./nginx-project/Dockerfile
+          push: true
+          tags: deepika2897/nginx:v1.0.0
 
       - name: Set up Minikube
         uses: medyagh/setup-minikube@latest
