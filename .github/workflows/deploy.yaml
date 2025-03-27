@@ -59,6 +59,10 @@ jobs:
         with:
           version: 'latest'
 
+      - name: Replace image tag in StatefulSet YAML
+        run: |
+          sed "s/{{IMAGE_TAG}}/${{ github.sha }}/g" ./nginx-project/nginx-statefulset-template.yaml > ./nginx-project/nginx-statefulset.yaml
+
       - name: Create Kubernetes namespace
         run: kubectl apply -f ./nginx-project/namespace.yaml --validate=false
 
