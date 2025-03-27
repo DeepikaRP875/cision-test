@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: deepika2897/nginx:{{IMAGE_TAG}}
+        image: deepika2897/nginx-image:v1.0.0
         ports:
         - containerPort: 443
           name: https
