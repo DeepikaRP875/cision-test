@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: deepika2897/nginx:${{ github.sha }}
+        image: deepika2897/nginx:{{IMAGE_TAG}}
         ports:
         - containerPort: 443
           name: https
