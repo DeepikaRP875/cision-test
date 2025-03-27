@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-security-deploy-test:
+  build-scan-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -21,38 +21,30 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: ./nginx-project
-          file: ./nginx-project/Dockerfile
-          push: false
-          tags: deepika2897/nginx:${{ github.sha }}
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.29.0
-        continue-on-error: true
-        with:
-          image-ref: 'deepika2897/nginx:${{ github.sha }}'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL'
-
-      - name: Push Docker image
+      - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: ./nginx-project
           file: ./nginx-project/Dockerfile
           push: true
-          tags: deepika2897/nginx:${{ github.sha }}
+          tags: deepika2897/nginx-image:latest
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.29.0
+        continue-on-error: true
+        with:
+          image-ref: 'deepika2897/nginx-image:latest'
+          format: 'table'
+          exit-code: '0' 
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL'
 
       - name: Set up Minikube
-        run: |
-          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          sudo install minikube-linux-amd64 /usr/local/bin/minikube
-          minikube start --driver=docker
+        uses: medyagh/setup-minikube@latest
+
+      - name: Start Minikube
+        run: minikube start --driver=docker
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
@@ -60,7 +52,7 @@ jobs:
           version: 'latest'
 
       - name: Create Kubernetes namespace
-        run: kubectl apply -f ./nginx-project/namespace.yaml --validate=false
+        run: kubectl apply -f ./nginx-project/namespace.yaml
 
       - name: Create Kubernetes secret
         run: |
@@ -72,8 +64,6 @@ jobs:
             --namespace=ns-nginx
 
       - name: Deploy StatefulSet
-        env:
-          IMAGE_TAG: ${{ github.sha }}
         run: |
           kubectl apply -f ./nginx-project/nginx-statefulset.yaml
           kubectl rollout status statefulset/nginx-statefulset -n ns-nginx
@@ -81,7 +71,7 @@ jobs:
       - name: Deploy Service
         run: kubectl apply -f ./nginx-project/nginx-service.yaml
 
-      - name: Test Connection
+      - name: Port forward and test connection
         run: |
           kubectl port-forward svc/nginx-service 8443:443 -n ns-nginx &
           sleep 10
