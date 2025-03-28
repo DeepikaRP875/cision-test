@@ -62,7 +62,7 @@ jobs:
         run: kubectl config use-context minikube
 
       - name: Create Kubernetes namespace
-        kubectl apply -f ./nginx-project/namespace.yaml --validate=false
+        run: kubectl apply -f ./nginx-project/namespace.yaml --validate=false
 
       - name: Create Kubernetes secret
         run: |
