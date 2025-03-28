@@ -30,6 +30,7 @@ spec:
         volumeMounts:
         - name: nginx-pvc
           mountPath: /usr/share/nginx/html
+          readOnly: true
         - name: tls-cert
           mountPath: /etc/ssl/certs
           readOnly: true
@@ -61,12 +62,14 @@ spec:
       - name: tls-cert
         secret:
           secretName: nginx-tls
+          defaultMode: 0400
           items:
           - key: tls.crt
             path: cision.crt
       - name: tls-key
         secret:
           secretName: nginx-tls
+          defaultMode: 0400
           items:
           - key: tls.key
             path: cision.key
