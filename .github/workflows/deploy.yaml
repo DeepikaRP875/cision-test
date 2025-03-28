@@ -56,7 +56,6 @@ jobs:
         run: |
           mkdir -p ${HOME}/.kube
           echo ${{ secrets.KUBE_CONFIG }} | base64 --decode > ${HOME}/.kube/config
-          # Add the octobay-api context
           kubectl config set-context octobay-api --cluster=minikube --namespace=default --user=minikube --kubeconfig=${HOME}/.kube/config
           kubectl config use-context octobay-api --kubeconfig=${HOME}/.kube/config
 
