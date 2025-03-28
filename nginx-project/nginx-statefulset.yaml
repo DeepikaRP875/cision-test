@@ -14,6 +14,13 @@ spec:
       labels:
         app: nginx
     spec:
+      initContainers:
+      - name: copy-index-html
+        image: deepika2897/nginx:${IMAGE_TAG}
+        command: ['sh', '-c', 'cp /usr/share/nginx/html/index.html /mnt/html/index.html']
+        volumeMounts:
+        - name: nginx-pvc
+          mountPath: /mnt/html
       containers:
       - name: nginx
         image: deepika2897/nginx:${IMAGE_TAG}
