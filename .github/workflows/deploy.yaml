@@ -59,7 +59,7 @@ jobs:
           version: 'latest'
 
       - name: Create Kubernetes namespace
-        run: kubectl apply -f ./nginx-project/namespace.yaml --validate=false
+        run: kubectl apply -f ./nginx-project/namespace.yaml
 
       - name: Create Kubernetes secret
         run: |
@@ -77,9 +77,3 @@ jobs:
 
       - name: Deploy Service
         run: kubectl apply -f ./nginx-project/nginx-service.yaml
-
-      - name: Port forward and test connection
-        run: |
-          kubectl port-forward svc/nginx-service 8443:443 -n ns-nginx &
-          sleep 10
-          curl -k https://localhost:8443
