@@ -47,16 +47,19 @@ jobs:
           push: true
           tags: deepika2897/nginx:v1.0.0
 
-      - name: Set up Minikube
-        uses: medyagh/setup-minikube@latest
-
-      - name: Start Minikube
-        run: minikube start --driver=docker
-
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
         with:
           version: 'latest'
+
+      - name: Create kubeconfig
+        run: |
+          mkdir -p ${HOME}/.kube
+          echo ${{ secrets.KUBE_CONFIG }} | base64 --decode > ${HOME}/.kube/config
+          cat ${HOME}/.kube/config
+
+      - name: Use context
+        run: kubectl config use-context octobay-api
 
       - name: Create Kubernetes namespace
         run: kubectl apply -f ./nginx-project/namespace.yaml
