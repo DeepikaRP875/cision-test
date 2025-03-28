@@ -59,7 +59,7 @@ jobs:
           version: 'latest'
 
       - name: Create Kubernetes namespace
-        run: kubectl apply -f ./nginx-project/namespace.yaml
+        run: kubectl apply -f ./nginx-project/namespace.yaml --validate=false
 
       - name: Create Kubernetes secret
         run: |
