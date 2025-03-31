@@ -69,12 +69,10 @@ jobs:
             --cert=/tmp/cision.crt \
             --key=/tmp/cision.key \
             --namespace=ns-nginx
-
       - name: Deploy StatefulSet
         run: |
           envsubst < ./nginx-project/nginx-statefulset.yaml | kubectl apply -f -
           kubectl rollout status statefulset/nginx-statefulset -n ns-nginx
-
       - name: Deploy Service
         run: kubectl apply -f ./nginx-project/nginx-service.yaml
       
