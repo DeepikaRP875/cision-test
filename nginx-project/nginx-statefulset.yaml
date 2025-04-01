@@ -14,6 +14,13 @@ spec:
       labels:
         app: nginx
     spec:
+      initContainers:
+      - name: copy-index-html
+        image: deepika2897/nginx:${IMAGE_TAG}
+        command: ['sh', '-c', 'cp /usr/share/nginx/html/index.html /mnt/html/index.html']
+        volumeMounts:
+        - name: nginx-pvc
+          mountPath: /mnt/html
       containers:
       - name: nginx
         image: deepika2897/nginx:${IMAGE_TAG}
@@ -21,7 +28,7 @@ spec:
         - containerPort: 443
           name: https
         volumeMounts:
-        - name: nginx-html
+        - name: nginx-pvc
           mountPath: /usr/share/nginx/html
         - name: tls-cert
           mountPath: /etc/ssl/certs
@@ -63,9 +70,6 @@ spec:
           items:
           - key: tls.key
             path: cision.key
-      - name: nginx-html
-        persistentVolumeClaim:
-          claimName: nginx-pvc
   volumeClaimTemplates:
   - metadata:
       name: nginx-pvc
