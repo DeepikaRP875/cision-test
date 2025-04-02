@@ -14,13 +14,6 @@ spec:
       labels:
         app: nginx
     spec:
-      initContainers:
-      - name: copy-index-html
-        image: deepika2897/nginx:${IMAGE_TAG}
-        command: ['sh', '-c', 'cp /usr/share/nginx/html/index.html /mnt/html/index.html']
-        volumeMounts:
-        - name: nginx-pvc
-          mountPath: /mnt/html
       containers:
       - name: nginx
         image: deepika2897/nginx:${IMAGE_TAG}
@@ -30,6 +23,9 @@ spec:
         volumeMounts:
         - name: nginx-pvc
           mountPath: /usr/share/nginx/html
+        - name: nginx-html-config
+          mountPath: /usr/share/nginx/html/index.html
+          subPath: index.html
         - name: tls-cert
           mountPath: /etc/ssl/certs
           readOnly: true
@@ -58,6 +54,9 @@ spec:
           initialDelaySeconds: 10
           periodSeconds: 10
       volumes:
+      - name: nginx-html-config
+        configMap:
+          name: nginx-html
       - name: tls-cert
         secret:
           secretName: nginx-tls
